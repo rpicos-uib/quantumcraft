@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": "minecraft:ender_eye",
+    "A": "minecraft:amethyst_shard",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    " E ",
+    " A ",
+    " S "
+  ],
+  "result": {
+    "id": "quantumcraft:probe",
+    "count": 1
+  }
+}

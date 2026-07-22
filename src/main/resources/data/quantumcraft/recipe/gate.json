@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "G": "minecraft:glass"
+  },
+  "pattern": [
+    " A ",
+    " G ",
+    " A "
+  ],
+  "result": {
+    "id": "quantumcraft:gate",
+    "count": 2
+  }
+}

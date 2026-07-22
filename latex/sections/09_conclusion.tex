@@ -1,0 +1,20 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+QuantumCraft embeds a real complex-amplitude statevector simulator, complete with the
+Pauli/Hadamard/phase single-qubit gate set, a general controlled-gate mechanism, a genuine
+Toffoli gate, and Born-rule probabilistic measurement, within a purpose-built spatial notation
+that maps a standard quantum-circuit diagram directly onto Minecraft's block grid: qubits as
+parallel timeline rows, single-qubit gates as blocks placed along them, and multi-qubit
+correlation expressed through shared time-columns across rows. Every probability and
+measurement outcome a player reads out is produced by actually simulating the circuit that
+player built, rather than by a scripted stand-in for one, down to details -- an explicit,
+visually distinct choice between an ideal amplitude readout and a genuine collapsing
+measurement; a hard three-qubit cap chosen specifically so every basis state's probability
+remains simultaneously visible; and a fixed, small, hand-verifiable gate set -- chosen to
+render ideas that are usually taken on the word of a simulator (that a superposition is real,
+that a measurement is genuinely destructive, that entanglement produces correlations
+classical bits cannot) as objects a player must construct and probe independently. The mod
+and its source code, together with this paper's typeset source, are released under permissive
+licenses; the author welcomes contributions, in particular toward the persisted regression
+suite and the classroom evaluation described in Section~\ref{sec:limitations}.

@@ -1,0 +1,88 @@
+\section{Minecraft as a Construction Substrate}
+\label{sec:minecraft-mechanics}
+
+A central claim of this work is that building a quantum circuit inside Minecraft constitutes
+a meaningfully different experience from assembling one in a schematic-based composer.
+Substantiating that claim requires describing precisely what ``building'' means within
+Minecraft itself, and identifying which of the game's own mechanics the mod reuses, extends,
+or deliberately avoids.
+
+\subsection{The voxel world and the timeline metaphor}
+
+Minecraft's world is a three-dimensional grid of one-metre cubes, or \emph{blocks}; nearly
+every action available to a player reduces to placing and removing blocks within this grid.
+QuantumCraft maps a standard quantum-circuit diagram directly onto this grid: one qubit
+occupies one row of qubit-line blocks running east, and a gate or marker block placed some
+distance east of a qubit line's anchor represents an operation applied at that row's
+corresponding time step, exactly as a gate drawn some distance along a horizontal wire in a
+textbook circuit diagram represents an operation at that point in time. A two-qubit gate
+such as CNOT is built from a pair of control and target marker blocks placed at the
+\emph{same} east-offset on two different qubit rows, reproducing the vertical connecting line
+a circuit diagram draws between a control dot and a target symbol, except that no physical
+wire block is required between them: Section~\ref{sec:architecture} describes how the mod's
+scanner recognizes this correlation purely from the two markers' shared time column, without
+needing an explicit connector the way CircuitCraft's electrical topology
+requires~\cite{picos2026circuitcraft}. This is a deliberate departure from CircuitCraft's own
+graph/union--find topology model (in which any two mutually conductive faces are
+electrically joined): a quantum circuit is conventionally drawn, taught, and reasoned about as
+a fixed number of horizontal time-ordered lines, not as an arbitrary wiring graph, so the
+in-world representation was chosen to match the diagram a student already encounters in a
+textbook or lecture slide, rather than reusing CircuitCraft's own metaphor merely for
+consistency between the two mods.
+
+\subsection{Redstone: why it does not extend to qubits}
+
+The base game already provides an entire circuit-like subsystem, redstone, built around
+\emph{redstone dust} (a wire-like block carrying a signal), \emph{redstone torches} and other
+sources, and a large family of blocks that read an incoming signal to trigger an effect. A
+redstone signal is an integer strength from 0 to 15, propagated through a discrete
+neighbor-notification event fired once per game tick; despite having no continuous quantity
+(CircuitCraft's own paper discusses this same mechanic at greater length in the
+classical-circuits context~\cite{picos2026circuitcraft}), redstone is widely used, both
+informally and as a subject of academic interest~\cite{nebel2016mining}, as an entry point
+into digital logic:
+players construct logic gates, adders, and working memory cells entirely from redstone
+components, and commonly describe and reason about redstone circuits in explicitly
+electrical language~\cite{dezuanni2015redstone}. That established role, however, does not
+extend to representing a qubit, and for a reason more fundamental than redstone's
+already-discrete signal strength: a redstone signal, whatever its strength, is always a
+single, locally determined, publicly readable integer, whereas a qubit's defining property is
+that it exists in a superposition of two amplitudes that cannot both be read out at once, and
+two qubits can become entangled such that neither one's state is even well defined
+independently of the other. No quantization of a single scalar signal, however fine, can
+represent a joint property that literally does not decompose into a value held separately by
+each of two locations, which is precisely why QuantumCraft introduces an entirely new
+representation (Section~\ref{sec:architecture}) rather than attempting to encode qubits into
+redstone's existing signal-strength mechanic the way some ad hoc community techniques
+approximate a continuous analog value with it.
+
+\subsection{Block entities and on-demand execution}
+
+Minecraft's modding interfaces expose the \emph{block entity} construct for a block that must
+retain arbitrary mutable data, and, if the block type requests it, execute code once per game
+tick. Every gate, qubit line, and control/target marker in this mod is implemented as a block
+entity for the same reason CircuitCraft's components are~\cite{picos2026circuitcraft}: it is
+the platform's existing mechanism for state tied to a specific position. Unlike
+CircuitCraft, however, none of QuantumCraft's block entities register a per-tick callback at
+all: a quantum circuit has no continuous transient to track between gate applications the way
+a charging capacitor does, so there is nothing for a circuit to be doing between one probe use
+and the next. A circuit is instead scanned and run once, on demand, exactly when a player
+right-clicks the probe against a qubit line (Section~\ref{sec:architecture}), which is both
+simpler to implement and a closer match to how a real quantum computer is actually used: a
+circuit is prepared once and then executed as a single shot, not continuously re-evaluated in
+the background.
+
+\subsection{What the mod adds}
+
+Given the preceding discussion, the mod's own contribution is a new, purpose-built spatial
+notation for a quantum circuit -- qubit rows as parallel timelines, single-qubit gates as
+blocks placed directly on those rows, and multi-qubit correlation expressed through shared
+time-columns across rows rather than through any wired connection -- together with a
+genuine statevector simulator to execute whatever circuit that notation describes
+(Section~\ref{sec:quantum-simulator}). Redstone itself plays no role in this mod at all,
+unlike in CircuitCraft, where it is reused deliberately for the one concept it is genuinely
+well suited to represent (a boolean on/off switch); no comparably suitable role for redstone's
+existing mechanics was identified for a quantum circuit, since even the mod's classical
+special case (Section~\ref{sec:experiments}'s Toffoli-gate experiment) is more directly
+expressed as boolean amplitudes at basis states $|0\rangle$ and $|1\rangle$ than through a
+signal-strength integer.

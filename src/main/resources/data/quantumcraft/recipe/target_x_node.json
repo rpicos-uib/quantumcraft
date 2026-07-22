@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:redstone",
+    "minecraft:gold_nugget"
+  ],
+  "result": {
+    "id": "quantumcraft:target_x_node",
+    "count": 2
+  }
+}

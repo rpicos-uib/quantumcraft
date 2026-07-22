@@ -1,0 +1,57 @@
+\section{Limitations and Future Work}
+\label{sec:limitations}
+
+\textbf{Fixed gate set, no continuous rotation angles.} The six single-qubit presets
+(Pauli~$X$/$Y$/$Z$, Hadamard, $S$, $T$) and the control/target multi-qubit mechanism are
+enough to build every worked experiment in Section~\ref{sec:experiments}, but exclude an
+arbitrary-angle rotation gate ($R_x(\theta)$, $R_y(\theta)$, $R_z(\theta)$), which a more
+advanced course would eventually need. As with CircuitCraft's own preset-cycling
+interaction~\cite{picos2026circuitcraft}, this design keeps the interaction model consistent
+with the remainder of the base game (right-clicking through a fixed, small list rather than a
+custom numeric-entry interface), at the cost of the continuous control a full gate set
+provides; exposing a numeric-entry interface for an arbitrary rotation angle is a natural
+extension.
+
+\textbf{Hard cap of three qubits.} Section~\ref{sec:pedagogy} explains the pedagogical
+rationale for this cap (keeping the full $2^n$-basis-state probability distribution
+displayable at once), but it also means QuantumCraft cannot demonstrate any algorithm whose
+interest specifically depends on a qubit count beyond three -- Grover's
+algorithm~\cite{grover1996fast} and Shor's~\cite{shor1997polynomial} both require considerably
+more qubits to exhibit their asymptotic advantage meaningfully. Raising this cap is
+straightforward in the simulator itself (the statevector representation scales as $2^n$
+regardless of the cap value) but would require redesigning the result heads-up display
+(Figure~\ref{fig:hud}), which currently assumes every basis state's probability fits on
+screen simultaneously.
+
+\textbf{No mid-circuit measurement or classical feedback.} A circuit, once scanned, is always
+run start to finish before any measurement occurs (Section~\ref{sec:quantum-simulator}); there
+is no mechanism for a measurement partway through a circuit to classically control a later
+gate, a pattern used by more advanced protocols such as quantum teleportation. Supporting this
+would require the world-scan algorithm (Section~\ref{sec:architecture}) to interleave scanning
+and execution rather than building the whole circuit before running any of it.
+
+\textbf{No persisted circuit state, no saved presets.} As with CircuitCraft's
+components~\cite{picos2026circuitcraft}, no block entity in this mod persists its
+right-click-selected preset across a world save and reload, and a circuit itself is never
+saved as an object -- only the placed blocks that describe it. This is a deliberate
+simplification given that QuantumCraft's circuits are re-run from scratch on every probe use
+regardless (Section~\ref{sec:quantum-simulator}), but it does mean a player must re-verify a
+gate's cycled-to preset after any world reload, exactly as a CircuitCraft player must for a
+resistor's resistance or a diode's forward-voltage family.
+
+\textbf{Verification remains informal.} As noted in Section~\ref{sec:validation}, the nine
+closed-form and statistical checks used during development have not yet been captured as a
+persisted, automatically re-run regression suite, and the tool's pedagogical effectiveness
+has to date been assessed only informally by its author, rather than through a controlled
+classroom study. A natural next step is a pre/post evaluation using an established
+quantum-computing concept inventory, comparing a cohort using QuantumCraft as a supplementary
+laboratory activity against a cohort using a conventional notebook-based simulator, in order
+to test whether the game-based, first-person construction experience described in
+Section~\ref{sec:pedagogy} produces a measurable difference in conceptual understanding,
+rather than in engagement alone.
+
+\textbf{Platform dependency.} As with CircuitCraft, the mod is necessarily tied to a specific
+version of Minecraft and of the Fabric mod loader, both of which are externally maintained and
+continue to evolve, and ongoing maintenance to track future game updates remains an
+unavoidable cost of building instructional software atop an actively developed commercial
+platform.

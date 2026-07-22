@@ -1,0 +1,38 @@
+\section{Verification Methodology}
+\label{sec:validation}
+
+Because the central premise of the mod is that its behavior is not a scripted
+approximation, the simulator was checked during development against nine closed-form and
+statistical properties, each executable as a plain Java program requiring no game instance
+(the \texttt{sim} package has no dependency on any Minecraft class at all, exactly as
+CircuitCraft's solver package does~\cite{picos2026circuitcraft}): that $X|0\rangle$ produces
+exactly $|1\rangle$; that a Hadamard applied to $|0\rangle$ produces exactly a 50/50
+superposition; that the two-qubit Bell-state and three-qubit GHZ-state circuits of
+Section~\ref{sec:experiments} produce their exact expected amplitudes; that a Toffoli gate
+reproduces the reversible-AND truth table for all eight classical three-bit inputs; that the
+phase-kickback circuit of Section~\ref{sec:exp-kickback} produces a deterministic $|1\rangle$;
+that 20{,}000 simulated measurements of a Bell state never once produced a $|01\rangle$ or
+$|10\rangle$ outcome and converged to within half a percentage point of the predicted 50\%
+split; and that total probability remains exactly $1$ after a long sequence of mixed single-
+and multi-qubit gates, confirming that every gate application preserves unitarity. All nine
+checks passed.
+
+Because the mod targets a version of Minecraft (26.2) released after the training data
+cutoff of the large language model used to assist in its development, and because that
+version introduced several breaking changes to modding-relevant application programming
+interfaces, every such interface used by the \texttt{block}, \texttt{blockentity}, and
+\texttt{network} packages (block registration, the two-phase heads-up-display rendering
+interface, and the per-item model-definition file format) was checked directly against the
+decompiled game source for this specific version prior to being relied upon, following the
+same methodological practice established during CircuitCraft's own
+development~\cite{picos2026circuitcraft}: verifying an assumption against the authoritative
+source for the exact version in use, rather than against generic recollection of how
+equivalent interfaces behaved in earlier versions of the game.
+
+For transparency, it should be noted that, at the time of writing, the nine checks described
+above were performed ad hoc during development rather than captured as a persisted,
+automatically re-run test suite within the repository -- the same caveat, and the same
+remedy, noted in CircuitCraft's own validation section~\cite{picos2026circuitcraft}.
+Formalizing these checks into a checked-in regression suite is planned prior to a longer-term
+evaluation of the tool (Section~\ref{sec:limitations}) and would strengthen a reviewer's
+ability to independently confirm the accuracy claims made here.

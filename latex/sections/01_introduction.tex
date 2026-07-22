@@ -1,0 +1,62 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Teaching the basic behavior of quantum circuits is difficult in part because the underlying
+phenomena -- a qubit existing in superposition rather than a definite 0 or 1, a measurement
+irreversibly collapsing that superposition to a single classical outcome, two qubits becoming
+entangled such that neither can be described independently of the other -- have no
+counterpart at all in classical, everyday intuition, unlike an RC charging curve or a
+mechanical oscillator, each of which at least resembles something a student has already
+observed. The conventional response pairs the mathematics of complex amplitudes and unitary
+matrices with a notebook-based simulator or an online circuit composer such as IBM's Quantum
+Composer or Google's Cirq, in which a student drags gates onto a schematic timeline and reads
+off a resulting statevector or histogram. These tools are effective and widely used, but each
+presents the circuit as a two-dimensional diagram manipulated with a mouse, once removed from
+the kind of first-person, spatial construction a sandbox game affords.
+
+Sandbox games occupy a distinctive position relative to this approach. Minecraft in
+particular has an established record as an informal STEM learning environment
+(Section~\ref{sec:related-work}), in part because constructing something inside it requires
+systems thinking comparable to an engineering task while remaining playful and low
+stakes~\cite{nebel2016mining}. Minecraft's own redstone subsystem is already a widely used
+entry point into classical digital logic, examined further in
+Section~\ref{sec:minecraft-mechanics}. No equivalent exists, however, for \emph{quantum}
+circuits within the base game: redstone signals are boolean and locally deterministic, with
+no built-in notion of superposition, complex amplitude, or entanglement between distant
+signals.
+
+This paper describes QuantumCraft~\cite{picos2026quantumcraft}, a modification (``mod'') for
+the Fabric mod loader, released as free and open-source software under the MIT license, that
+adds a small, complete set of quantum-circuit components to Minecraft: a qubit-line block
+establishing one of up to three parallel timeline rows, a single cyclable gate block offering
+the Pauli~$X$, $Y$, $Z$, Hadamard, $S$, and $T$ gates, a pair of control and target marker
+blocks that together represent a controlled-NOT or, with two controls, a Toffoli gate, and a
+handheld probe reading out either the exact probability of every basis state or a genuine
+collapsing measurement. Placing gate and marker blocks along a qubit line, left to right in
+time order, constructs an actual quantum circuit within the game world; probing that circuit
+runs a real complex-amplitude statevector simulator, applying the exact unitary matrix for
+each placed gate in sequence, rather than a scripted approximation of what a quantum computer
+would report. An entangled Bell state built this way genuinely has zero probability of
+appearing in the $|01\rangle$ or $|10\rangle$ basis states, and repeated measurements of it
+genuinely reproduce a 50/50 split between $|00\rangle$ and $|11\rangle$, in the same sense
+that CircuitCraft's~\cite{picos2026circuitcraft} RC charging curve is a real solution to the
+underlying differential equation rather than an animation tuned to look right.
+
+The remainder of this paper is organized as follows. Section~\ref{sec:related-work}
+situates QuantumCraft relative to existing quantum-circuit simulators, the foundational
+quantum-computing literature, and the literature on Minecraft in education.
+Section~\ref{sec:minecraft-mechanics} examines which of Minecraft's own construction
+mechanics the mod builds upon, and why redstone's existing role as an entry point into
+classical digital logic does not, by itself, extend to representing a qubit.
+Section~\ref{sec:architecture} describes the mod's own software architecture, in particular
+the algorithm used to translate a player's in-world gate placement into a quantum circuit.
+Section~\ref{sec:quantum-simulator} describes the statevector simulator itself, including the
+gate set, the general controlled-gate and Toffoli mechanisms, and Born-rule measurement.
+Section~\ref{sec:pedagogy} discusses the pedagogical rationale underlying each design choice,
+and Section~\ref{sec:experiments} gives five complete, reproducible worked circuits -- a
+single-qubit superposition, a Bell state, a phase-kickback demonstration, a three-qubit GHZ
+state, and a Toffoli-gate truth-table verification -- built directly into the same world,
+with exact gate sequences and closed-form expected results for each.
+Section~\ref{sec:validation} describes how the simulator was verified during development.
+Section~\ref{sec:limitations} discusses current limitations and planned classroom
+evaluation, and Section~\ref{sec:conclusion} concludes.

@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "QuantumCraft: a Fabric mod for teaching quantum circuits in Minecraft"
+authors:
+  - family-names: "Picos"
+    given-names: "Rodrigo"
+    affiliation: "Universitat de les Illes Balears"
+  - family-names: "Stavrinides"
+    given-names: "Stavros G."
+    affiliation: "Democritus University of Thrace"
+  - family-names: "Stavrinides"
+    given-names: "George"
+    affiliation: "Democritus University of Thrace"
+  - family-names: "Picos"
+    given-names: "Ariadna"
+    affiliation: "Universitat de les Illes Balears"
+  - family-names: "Picos"
+    given-names: "Gerard"
+    affiliation: "Universitat de les Illes Balears"
+version: 0.1.0
+date-released: 2026-07-22
+url: "https://github.com/rpicos-uib/quantumcraft"
+repository-code: "https://github.com/rpicos-uib/quantumcraft"
+license: MIT

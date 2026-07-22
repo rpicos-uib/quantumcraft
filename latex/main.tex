@@ -1,0 +1,84 @@
+\documentclass[11pt]{article}
+
+% Generic, journal-agnostic preamble. Before submission, replace this with the
+% official Overleaf/LaTeX template for the target journal and re-flow these
+% sections into it -- the content is written to be template-independent.
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, fit, backgrounds}
+\usepackage[margin=1in]{geometry}
+\usepackage{caption}
+
+\title{QuantumCraft: An Open-Source Minecraft Mod to Teach Quantum Circuits using a Real Statevector Simulator}
+
+\author{
+Rodrigo Picos\\
+\small Universitat de les Illes Balears
+\and
+Stavros G. Stavrinides\\
+\small Democritus University of Thrace
+\and
+George Stavrinides\\
+\small Democritus University of Thrace
+\and
+Ariadna Picos\\
+\small Universitat de les Illes Balears
+\and
+Gerard Picos\\
+\small Universitat de les Illes Balears
+}
+
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper presents QuantumCraft, an open-source modification (``mod'') for the sandbox
+game Minecraft that transforms the game world into a quantum-circuit laboratory. Players
+place single-qubit gate blocks (Pauli~$X$/$Y$/$Z$, Hadamard, $S$, $T$) and multi-qubit
+control/target marker blocks along up to three parallel ``qubit line'' rows, laid out
+left to right in the same time-ordered convention used by a standard quantum-circuit
+diagram, then read out the result with a handheld probe -- either an exact, ideal
+readout of every basis state's probability, or a genuine collapsing Born-rule
+measurement. In contrast to a scripted or purely illustrative stand-in for quantum
+behavior, every amplitude, probability, and measurement outcome QuantumCraft displays is
+produced by an actual complex-amplitude statevector simulator applying real unitary gate
+matrices, the same representation used by general-purpose quantum-circuit simulators, up
+to and including a genuine controlled-controlled-NOT (Toffoli) gate and Born-rule
+probabilistic collapse. This paper describes why Minecraft's existing redstone subsystem,
+despite its established role as an entry point into classical digital logic, does not by
+itself extend to representing a qubit's superposition, the system's software
+architecture, the statevector formulation underlying it, the pedagogical rationale for
+embedding a correct simulator within a game environment rather than a dedicated
+notebook-based tool, and the verification methodology employed during development. The
+paper concludes with a discussion of current limitations and a roadmap for classroom
+evaluation.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_minecraft_mechanics}
+\input{sections/04_architecture}
+\input{sections/05_quantum_simulator}
+\input{sections/06_pedagogy}
+\input{sections/06b_experiments}
+\input{sections/07_validation}
+\input{sections/08_limitations_future_work}
+\input{sections/09_conclusion}
+\input{sections/10_availability}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\clearpage
+\input{sections/11_appendix_recipes}
+
+\end{document}

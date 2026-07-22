@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "quantumcraft:block/control_node" }
+  }
+}

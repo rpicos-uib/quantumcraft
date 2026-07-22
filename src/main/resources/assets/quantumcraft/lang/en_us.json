@@ -1,0 +1,8 @@
+{
+  "block.quantumcraft.qubit_line": "Qubit Line",
+  "block.quantumcraft.gate": "Quantum Gate",
+  "block.quantumcraft.control_node": "Control Node",
+  "block.quantumcraft.target_x_node": "Target Node",
+  "item.quantumcraft.probe": "Quantum Probe",
+  "itemGroup.quantumcraft.gates": "QuantumCraft"
+}

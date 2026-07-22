@@ -1,0 +1,81 @@
+\section{Related Work}
+\label{sec:related-work}
+
+\subsection{Quantum computing: foundations and simulators}
+
+The idea that a quantum-mechanical system could simulate physics more efficiently than a
+classical computer originates with Feynman~\cite{feynman1982simulating}; Deutsch subsequently
+formalized a universal quantum computer~\cite{deutsch1985quantum} and, with Jozsa, gave the
+first explicit problem for which a quantum algorithm provably outperforms any classical
+deterministic one~\cite{deutschjozsa1992rapid}, the same phase-kickback mechanism
+Section~\ref{sec:experiments} demonstrates directly in-world. Shor's
+factoring~\cite{shor1997polynomial} and Grover's search~\cite{grover1996fast} algorithms
+established quantum computing's practical significance beyond foundational interest.
+Nielsen and Chuang's textbook~\cite{nielsenchuang2010} is the standard reference for the
+statevector formalism, gate set, and measurement postulate this mod implements directly
+(Section~\ref{sec:quantum-simulator}). General-purpose software simulators such as Qiskit and
+Cirq, and hardware-backed composers such as IBM's Quantum Composer, let a user assemble a
+circuit from a gate palette and inspect the resulting statevector or measurement histogram;
+QuantumCraft uses the same underlying representation -- a complex-amplitude vector evolved by
+successive unitary matrix multiplication -- but embeds it in a three-dimensional, first-person,
+block-based world rather than a schematic canvas, mirroring the relationship CircuitCraft
+bears to SPICE-family circuit simulators~\cite{picos2026circuitcraft}.
+
+\subsection{Entanglement and reversible logic}
+
+Two multi-qubit phenomena central to this mod's worked experiments
+(Section~\ref{sec:experiments}) have their own foundational literature. Bell's
+theorem~\cite{bell1964epr} established that the correlations a pair of entangled qubits
+exhibit cannot be reproduced by any local hidden-variable theory, the theoretical result the
+Bell-state experiment in Section~\ref{sec:experiments} illustrates operationally rather than
+by rederiving the inequality itself; Greenberger, Horne, and Zeilinger's three-qubit
+generalization~\cite{ghz1989going} (the ``GHZ state'') sharpens the same point using perfect
+rather than merely statistical correlations, and is the target state of this mod's
+three-qubit worked experiment. Toffoli's reversible-computing
+construction~\cite{toffoli1980reversible} showed that any classical boolean function can be
+computed by a reversible (and hence, in particular, quantum-realizable) circuit built from a
+single universal three-input gate bearing his name; this mod's Toffoli-gate experiment
+(Section~\ref{sec:experiments}) verifies exactly that reversible-AND truth table directly
+against a real statevector simulation.
+
+\subsection{Minecraft in education}
+\label{sec:minecraft-in-education}
+
+The instructional value of games and simulations has been studied extensively in general: a
+meta-analysis by Sitzmann~\cite{sitzmann2011meta} found simulation games to be more effective
+for training self-efficacy and knowledge retention than comparison instructional methods
+across a range of technical domains. Minecraft occupies a disproportionately large share of
+that broader literature. Microsoft maintains and markets a dedicated, classroom-oriented
+variant of the game, \emph{Minecraft: Education Edition}, an indication of how extensively the
+game had already been adopted informally by educators prior to this commercial
+productization. Nebel et al.'s review~\cite{nebel2016mining} surveys this literature broadly
+and identifies Minecraft's principal appeal for education as the same property that makes it
+appealing as a game: an open, constructive world in which a learner's own artifact, rather
+than a worked example, is the object of study, closely matching Papert's constructionist
+framing~\cite{papert1980mindstorms}, discussed further in Section~\ref{sec:pedagogy}.
+
+Published case studies span a range of subjects well outside computer science. Bos et
+al.~\cite{bos2014mathematics} describe using Minecraft to teach elementary-school mathematics
+concepts through building tasks; Short's account~\cite{short2012teaching} covers the use of
+the game to teach general science concepts in a secondary-school setting; and Cipollone et
+al.~\cite{cipollone2014creative} present a case study of Minecraft used as an open-ended
+creative tool. Callaghan's survey~\cite{callaghan2016investigating} identifies a theme common
+to each of these studies: teachers report high engagement fairly consistently, whereas
+rigorously measured gains in specific learning outcomes are reported less often, a caveat
+also present in the general simulation-games literature~\cite{sitzmann2011meta} and one this
+paper does not claim to have resolved for QuantumCraft specifically
+(Section~\ref{sec:limitations}).
+
+Within that broader literature, the subset closest to the present paper's subject concerns
+Minecraft's native redstone subsystem, already a common entry point for teaching classical
+digital logic: players build logic gates, adders, and working memory cells entirely from
+in-game blocks, and Dezuanni et al.~\cite{dezuanni2015redstone} document children describing
+and reasoning about redstone circuits in explicitly electrical language, notwithstanding that
+the underlying mechanic is discrete and boolean rather than continuous or quantum-mechanical
+(Section~\ref{sec:minecraft-mechanics} discusses redstone's mechanics in more depth). Very
+recent work has begun to examine quantum computing specifically as a computer-science
+education topic in its own right~\cite{seegerer2021quantum}, independent of any game-based
+delivery mechanism. To the author's knowledge, QuantumCraft is the first Minecraft
+modification to embed a real statevector quantum-circuit simulator, rather than approximating
+quantum behavior with the game's existing discrete, classical redstone mechanics, or
+presenting quantum concepts purely through a companion notebook alongside the game.

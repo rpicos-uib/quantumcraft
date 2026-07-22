@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    "minecraft:glass",
+    "minecraft:redstone",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "quantumcraft:qubit_line",
+    "count": 4
+  }
+}

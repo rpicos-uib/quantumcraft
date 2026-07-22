@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "quantumcraft",
+	"version": "${version}",
+	"name": "QuantumCraft",
+	"description": "Teach quantum computing in Minecraft: build real quantum circuits (up to 3 qubits) from Pauli/Hadamard/phase/CNOT/Toffoli gate blocks along qubit timelines, and read out exact amplitudes or a probabilistic measurement, all backed by a genuine complex-amplitude statevector simulator.",
+	"authors": [
+		"rpicos"
+	],
+	"contact": {
+	},
+	"license": "MIT",
+	"icon": "assets/quantumcraft/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.rpicos.quantumcraft.QuantumCraft"
+		],
+		"client": [
+			"com.rpicos.quantumcraft.client.QuantumCraftClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

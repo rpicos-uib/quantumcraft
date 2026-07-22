@@ -1,0 +1,154 @@
+\section{Worked Experiments}
+\label{sec:experiments}
+
+To ground the pedagogical claims of Section~\ref{sec:pedagogy} in something a reader can
+reproduce rather than take on faith, this section specifies five complete circuits, each
+built from the mod's own gate and marker blocks and each demonstrating a distinct piece of
+standard introductory quantum-computing curriculum: a single-qubit superposition, a two-qubit
+Bell state, a phase-kickback interference effect, a three-qubit GHZ state, and a
+Toffoli-gate truth-table verification. Every circuit was built directly into the same
+persistent world used throughout this paper's own development, laid out as five side-by-side
+benches on a flattened platform beginning a few blocks east of the world's spawn point, so a
+reader with access to that world can walk up to any of them immediately rather than
+reconstruct them from a diagram.
+
+\subsection{A methodological note on presets}
+
+As with CircuitCraft's own components~\cite{picos2026circuitcraft}, no block entity in this
+mod overrides Minecraft's block-entity NBT read/write methods, so every gate block, freshly
+placed, loads at its hardcoded default preset (Pauli~$X$, the first entry in the cycle order
+given in Section~\ref{sec:architecture}) regardless of which gate the experiment actually
+calls for. Each experiment below states the exact number of right-clicks needed to reach the
+intended gate, using the fixed cycle order
+$X \to Y \to Z \to H \to S \to T \to X \to \cdots$. Because the default preset is already
+$X$, a gate left completely unclicked functions as a bit-flip, which Experiment~\ref{sec:exp-toffoli}
+below uses directly to prepare classical input states without needing any additional preset
+at all.
+
+\subsection{Experiment 1: single-qubit superposition}
+\label{sec:exp-superposition}
+
+The simplest circuit in this set: a single qubit line with one gate block placed one step
+east of its anchor, right-clicked three times to cycle the gate from its default $X$ preset
+to $H$ ($X \to Y \to Z \to H$). Built ten blocks east of spawn.
+
+\textbf{Procedure.} Right-click the probe against the qubit line for an ideal readout.
+Separately, shift-right-click it a few dozen times to accumulate a sample of individual
+measurements.
+
+\textbf{Expected result.} Starting from $|0\rangle$, the Hadamard gate produces
+\begin{equation}
+H|0\rangle = \frac{1}{\sqrt2}\left(|0\rangle + |1\rangle\right),
+\end{equation}
+so the ideal readout shows exactly 50\% at $|0\rangle$ and 50\% at $|1\rangle$, and repeated
+measurements should show both outcomes appearing with roughly equal frequency, converging
+toward that same 50/50 split as more shots are collected.
+
+\subsection{Experiment 2: Bell state}
+\label{sec:exp-bell}
+
+Two parallel qubit lines (rows $q_0$ and $q_1$). A gate block on $q_0$, one step east of its
+anchor, right-clicked three times to reach $H$, exactly as in
+Experiment~\ref{sec:exp-superposition}. A control marker on $q_0$ and a target marker on
+$q_1$, both two steps east of their respective anchors (the same time column), together
+representing a CNOT with $q_0$ as control and $q_1$ as target. Built twenty blocks east of
+spawn.
+
+\textbf{Procedure.} Right-click the probe against either qubit line for an ideal readout (the
+scan follows the shared qubit-line network regardless of which row is clicked,
+Section~\ref{sec:architecture}).
+
+\textbf{Expected result.} Starting from $|00\rangle$, the Hadamard produces
+$\frac{1}{\sqrt2}(|00\rangle + |10\rangle)$ (recall qubit~0 is the least-significant, i.e.\
+rightmost, digit), and the subsequent CNOT flips $q_1$ exactly when $q_0$ is~1, giving the
+Bell state
+\begin{equation}
+\frac{1}{\sqrt2}\left(|00\rangle + |11\rangle\right),
+\end{equation}
+an exact 50\% at $|00\rangle$ and $|11\rangle$ and \emph{exactly zero}, not merely small, at
+$|01\rangle$ and $|10\rangle$ -- the signature Bell's theorem shows cannot be reproduced by
+two independently-behaving classical bits~\cite{bell1964epr}, reproduced here in Figure~\ref{fig:hud}'s
+left panel. A shift-right-click measurement always yields either $00$ or $11$, never $01$ or
+$10$, no matter how many times it is repeated.
+
+\subsection{Experiment 3: phase kickback}
+\label{sec:exp-kickback}
+
+A single qubit line with three gates in sequence: $H$ one step east of the anchor (three
+right-clicks, as above), $Z$ two steps east (two right-clicks, $X \to Y \to Z$), and a second
+$H$ three steps east (three right-clicks again). Built thirty-four blocks east of spawn.
+
+\textbf{Procedure.} Right-click the probe for an ideal readout.
+
+\textbf{Expected result.} Although the qubit passes through an equal superposition twice, the
+final state is a deterministic $|1\rangle$, not a 50/50 mixture:
+\begin{equation}
+H\,Z\,H\,|0\rangle = H\,Z\,\frac{1}{\sqrt2}(|0\rangle+|1\rangle)
+= H\,\frac{1}{\sqrt2}(|0\rangle-|1\rangle) = |1\rangle,
+\end{equation}
+so the ideal readout shows exactly 0\% at $|0\rangle$ and 100\% at $|1\rangle$, and every
+measurement returns $1$ with certainty. This is the same phase-kickback interference
+mechanism that underlies the Deutsch--Jozsa
+algorithm~\cite{deutschjozsa1992rapid}: information encoded purely in a relative phase (the
+sign flip $Z$ applies to $|1\rangle$) becomes a deterministic, directly observable outcome
+only once a second Hadamard converts that phase difference back into a population difference,
+despite neither of the two intermediate superposition states individually revealing anything
+about the sign at all.
+
+\subsection{Experiment 4: three-qubit GHZ state}
+\label{sec:exp-ghz}
+
+Three parallel qubit lines ($q_0$, $q_1$, $q_2$). A gate block on $q_0$ one step east,
+cycled to $H$ (three right-clicks). A control marker on $q_0$ and target marker on $q_1$, both
+two steps east (CNOT, $q_0 \to q_1$). A second control marker on $q_0$ and target marker on
+$q_2$, both three steps east (a second CNOT, $q_0 \to q_2$). Built forty-eight blocks east of
+spawn.
+
+\textbf{Procedure.} Right-click the probe against any of the three qubit lines for an ideal
+readout.
+
+\textbf{Expected result.} The Hadamard produces
+$\frac{1}{\sqrt2}(|000\rangle + |100\rangle)$, and each subsequent CNOT copies $q_0$'s value
+onto one more qubit, giving the three-qubit GHZ state~\cite{ghz1989going}
+\begin{equation}
+\frac{1}{\sqrt2}\left(|000\rangle + |111\rangle\right),
+\end{equation}
+an exact 50\% at $|000\rangle$ and $|111\rangle$ and exactly zero at every one of the
+remaining six basis states -- perfect three-way correlation with no classical analogue, a
+sharper demonstration of the same nonlocal correlation Experiment~\ref{sec:exp-bell}
+illustrates with two qubits~\cite{ghz1989going}.
+
+\subsection{Experiment 5: Toffoli gate as reversible AND}
+\label{sec:exp-toffoli}
+
+The most advanced circuit in this set, and the only one whose classical truth table is
+checked exhaustively rather than read off a single run. Three parallel qubit lines ($q_0$,
+$q_1$, $q_2$, the two controls and the target); a control marker on $q_0$ and a second control
+marker on $q_1$, together with a target marker on $q_2$, all at the same time column, two steps
+east of their respective anchors, leaving the one-step column free for the preparation gates
+described next. Built sixty-four blocks east of spawn.
+
+\textbf{Procedure.} The two control qubits' classical input is set by placing (or removing) a
+gate block one step east of the anchor -- \emph{before} the Toffoli's own column, two steps
+east -- on the corresponding row: leaving that position empty prepares that control as
+$|0\rangle$ (the identity, i.e.\ no gate at all), while placing a freshly placed gate block
+there -- its default preset, $X$, requiring zero right-clicks -- prepares that control as
+$|1\rangle$. Repeat the shift-right-click
+measurement once for each of the four combinations of the two controls' preparation gates
+being present or absent, recording the target qubit's measured outcome each time; the target
+line itself is left completely unprepared ($|0\rangle$) before every run.
+
+\textbf{Expected result.} A Toffoli gate flips its target exactly when both controls are
+$|1\rangle$, and leaves classical basis states as basis states (no superposition is ever
+introduced by this circuit, since no Hadamard is used), so the four runs reproduce exactly the
+reversible-AND truth table~\cite{toffoli1980reversible}
+\begin{equation}
+(c_1, c_2, t) \mapsto (c_1, c_2, t \oplus (c_1 \wedge c_2)),
+\end{equation}
+with $t=0$ throughout: $(0,0)\to$ target measures $0$; $(0,1)\to$ target measures $0$;
+$(1,0)\to$ target measures $0$; $(1,1)\to$ target measures $1$, the one input combination for
+which both controls are set. Every one of the four measurements returns its predicted outcome
+with certainty (probability $100\%$ at that one basis state on the corresponding ideal
+readout, $0\%$ everywhere else), since every input to this circuit is a classical basis state
+rather than a superposition, illustrating concretely that a quantum computer's gate set is a
+strict superset of classical reversible logic, not a wholly separate, unrelated formalism.

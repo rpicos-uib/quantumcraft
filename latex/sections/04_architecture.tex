@@ -1,0 +1,88 @@
+\section{System Architecture}
+\label{sec:architecture}
+
+QuantumCraft is built on Fabric, the same modding toolchain CircuitCraft
+uses~\cite{picos2026circuitcraft}. The codebase is organized into five packages, shown in
+Figure~\ref{fig:architecture}: a simulator package with no dependency on any Minecraft class
+at all, a pair of packages describing the in-world blocks and their per-block state, a
+networking package that scans a player's placed blocks into a circuit and reports the result
+back to the client, and a client-only package responsible for rendering the probe's result
+heads-up display.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+    box/.style={draw, rounded corners, minimum width=6.4cm, minimum height=1cm,
+                align=center, font=\small},
+    node distance=0.45cm
+]
+\node[box, fill=gray!10] (sim) {\texttt{sim} --- pure-Java statevector simulator\\(no Minecraft dependency)};
+\node[box, below=of sim, fill=blue!8] (blockentity) {\texttt{blockentity} --- qubit-line, gate, and\\control/target marker state};
+\node[box, below=of blockentity, fill=blue!8] (block) {\texttt{block} --- placement and right-click preset cycling};
+\node[box, below=of block, fill=orange!12] (network) {\texttt{network} --- world-scan-to-circuit bridge,\\probe result protocol};
+\node[box, below=of network, fill=green!10] (client) {\texttt{client} --- result HUD rendering (client-side only)};
+
+\draw[-{Latex[length=2mm]}] (blockentity) -- (sim);
+\draw[-{Latex[length=2mm]}] (block) -- (blockentity);
+\draw[-{Latex[length=2mm]}] (network) -- (blockentity);
+\draw[-{Latex[length=2mm]}] (network) -- (sim);
+\draw[-{Latex[length=2mm]}] (client) -- (network);
+\end{tikzpicture}
+\caption{Package-level architecture. As in CircuitCraft, the simulator has zero Minecraft
+dependencies and is directly unit-testable with plain \texttt{javac}/\texttt{java}; every
+other layer builds on it.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Qubit lines, gates, and markers}
+
+A qubit-line block establishes one qubit's timeline row and carries no adjustable state of
+its own. A single gate block, placed east of a qubit line's anchor, cycles through six
+presets on right-click -- Pauli~$X$, $Y$, $Z$, Hadamard, $S$, and $T$ -- exactly as
+CircuitCraft's diode cycles through its own preset family~\cite{picos2026circuitcraft}: one
+block class serves every single-qubit gate rather than six separate block classes, keeping
+the block/texture/recipe count tractable while still exposing the full single-qubit gate set
+this mod supports. A control marker and a target marker, placed at the same east-offset on
+two (for CNOT) or three (for Toffoli, with two control markers) different qubit rows,
+together represent a multi-qubit gate; unlike every two-terminal component in
+CircuitCraft, none of these blocks is directional, since a gate's effect does not depend on
+which horizontal face a player was looking toward when it was placed.
+
+\subsection{The world-scan-to-circuit bridge}
+
+Unlike CircuitCraft's continuous, per-tick network rebuild, QuantumCraft constructs a circuit
+only when a player right-clicks the probe against a qubit line, via a four-step scan.
+First, a flood fill over six-face adjacency, following only positions whose block entity is a
+qubit line, finds every qubit line connected to the clicked position. Second, the found lines
+are sorted by position (their north--south coordinate primarily) to assign each a stable qubit
+index from~0 up to the three-qubit cap this mod supports. Third, each qubit row is scanned
+block by block to the east, up to a fixed maximum timeline length, recording whatever gate or
+marker block entity, if any, occupies each offset. Fourth, the recorded entries are grouped by
+their shared east-offset (their time column) and translated into circuit operations: a lone
+gate entry becomes a single-qubit gate applied to its own row; one control marker paired with
+one target marker at the same column becomes a controlled-NOT; two control markers paired
+with one target becomes a Toffoli gate. Any other combination found within a single column --
+an unpaired control with no target, two target markers, or more controls than the mod's
+gate set supports -- is recorded as a warning and simply skipped rather than causing the scan
+to fail, so an incompletely wired column fails safely, in the same spirit as CircuitCraft's
+floating-node handling~\cite{picos2026circuitcraft}, rather than crashing or silently
+misinterpreting the player's intent.
+
+\subsection{The quantum probe}
+
+A single handheld probe item right-clicked against a qubit line triggers the scan described
+above, builds the resulting circuit's final statevector (Section~\ref{sec:quantum-simulator}),
+and reports one of two things back to the clicking player, depending on whether the
+interaction was a plain right-click or a shift-right-click. A plain right-click performs an
+\emph{ideal readout}: every basis state's exact probability is computed and sent to the
+client, with no randomness and no collapse, the same sense in which CircuitCraft's
+oscilloscope displays an exact voltage rather than a noisy measurement. A shift-right-click
+instead performs a genuine \emph{measurement}: the final statevector is sampled once, using
+the standard Born-rule cumulative-probability procedure (Section~\ref{sec:quantum-simulator}),
+the state is collapsed onto that single sampled outcome, and only that one classical outcome
+-- not the full probability distribution that produced it -- is reported. This distinction is
+made visually unmistakable in the result heads-up display (Figure~\ref{fig:hud}), which
+labels the two modes ``IDEAL READOUT'' and ``MEASURED'' respectively and highlights only the
+single collapsed row in the latter case, so that the difference between reading out amplitude
+information no physical quantum computer could ever expose directly and performing an actual
+one-shot measurement is never conflated.

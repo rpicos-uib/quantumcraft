@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "quantumcraft:block/target_x_node" }
+  }
+}

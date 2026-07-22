@@ -1,0 +1,80 @@
+\section{The Quantum Simulator}
+\label{sec:quantum-simulator}
+
+\subsection{Statevector representation}
+
+The simulator follows the standard statevector formulation~\cite{nielsenchuang2010}. An
+$n$-qubit register (QuantumCraft supports $n \in \{1,2,3\}$) is represented by a complex
+amplitude vector $\psi \in \mathbb{C}^{2^n}$ indexed by basis state, using the little-endian
+convention that qubit~0 is the least-significant bit of the index -- so, for two qubits, the
+index ordering is $|00\rangle, |01\rangle, |10\rangle, |11\rangle$ with qubit~0 varying
+fastest. A freshly constructed register is initialized to $\psi = (1, 0, \ldots, 0)$, the
+all-zero basis state $|0\cdots0\rangle$, and every gate application below preserves the
+invariant $\sum_i |\psi_i|^2 = 1$ by construction, since every matrix applied is unitary.
+
+\subsection{Single-qubit gates}
+
+A single-qubit gate is specified by a $2\times2$ unitary matrix; the mod exposes six presets,
+each cycled by right-clicking a gate block (Section~\ref{sec:architecture}):
+\begin{equation}
+X = \begin{bmatrix} 0&1\\1&0 \end{bmatrix}, \quad
+Y = \begin{bmatrix} 0&-i\\i&0 \end{bmatrix}, \quad
+Z = \begin{bmatrix} 1&0\\0&-1 \end{bmatrix}, \quad
+H = \frac{1}{\sqrt2}\begin{bmatrix} 1&1\\1&-1 \end{bmatrix}, \quad
+S = \begin{bmatrix} 1&0\\0&i \end{bmatrix}, \quad
+T = \begin{bmatrix} 1&0\\0&e^{i\pi/4} \end{bmatrix}.
+\end{equation}
+Applying such a matrix to qubit $q$ of an $n$-qubit register means: for every pair of basis
+indices $(i, j)$ differing only in bit $q$ (with bit $q$ clear in $i$ and set in $j$), replace
+$(\psi_i, \psi_j)$ with the matrix product of the $2\times2$ gate and the two-component vector
+$(\psi_i, \psi_j)$, leaving every other amplitude untouched -- the direct implementation of
+the tensor-product action $I \otimes \cdots \otimes U \otimes \cdots \otimes I$ without ever
+materializing the full $2^n \times 2^n$ matrix.
+
+\subsection{Controlled gates and the Toffoli}
+
+A controlled-$U$ gate, of which CNOT ($U = X$) is the special case this mod's control/target
+marker pair represents (Section~\ref{sec:architecture}), applies the single-qubit matrix $U$
+to a target qubit only for those basis states in which a nominated control qubit's bit is~1,
+leaving every basis state with the control bit clear entirely unchanged. This is implemented
+as one general mechanism parameterized by an arbitrary $2\times2$ matrix, so a controlled-$X$
+(CNOT), controlled-$Z$, or controlled-$Y$ all reduce to the same code path rather than three
+separate implementations. The Toffoli gate (CCX), the doubly-controlled generalization
+represented by two control markers and one target marker sharing a time column
+(Section~\ref{sec:architecture}), applies the $X$ matrix's basis-flip only to those states in
+which \emph{both} nominated control qubits' bits are~1: for every pair of basis indices
+differing only in the target bit, with both control bits set in each, the two amplitudes are
+swapped. Because a classical bit can be encoded as the basis state $|0\rangle$ or
+$|1\rangle$ and never placed in superposition, the Toffoli gate applied to classical inputs
+reproduces exactly the reversible-AND truth table Toffoli's own reversible-computing
+construction describes~\cite{toffoli1980reversible}, verified directly in
+Section~\ref{sec:validation} and demonstrated as a worked experiment in
+Section~\ref{sec:experiments}.
+
+\subsection{Measurement}
+
+A measurement (triggered by a shift-right-click of the probe, Section~\ref{sec:architecture})
+implements the standard Born rule~\cite{nielsenchuang2010}: a uniform random number in
+$[0,1)$ is drawn and compared against the cumulative sum of $|\psi_i|^2$ over basis states in
+index order, and the first index at which the cumulative sum exceeds the draw is the sampled
+outcome. Every amplitude is then set to zero except the sampled outcome's, which is set to
+$1$, collapsing the register exactly as an ideal projective measurement would. Because this
+sampling procedure is only ever invoked once per probe use and the resulting register is
+immediately discarded rather than persisted (Section~\ref{sec:architecture}), no mechanism is
+needed to reset a register's state between uses, unlike a physical quantum computer or a
+notebook-based simulator session, where explicit re-preparation between shots is often a
+separate step.
+
+\subsection{On-demand circuit execution}
+
+A \texttt{QuantumCircuit} is simply an ordered list of operations -- single-qubit gates,
+controlled gates, and Toffoli gates -- built directly from the world scan
+(Section~\ref{sec:architecture}) rather than persisted as block-entity state anywhere. Running
+a circuit allocates a fresh register initialized to $|0\cdots0\rangle$ and applies every
+recorded operation to it in the scanned left-to-right (time) order, then discards the
+intermediate register once a final result -- an ideal readout or a single measurement -- has
+been reported to the player. There is, deliberately, no notion of a circuit's state persisting
+between one probe use and the next: every probe use is a fresh, independent run of the whole
+circuit from $|0\cdots0\rangle$, matching how a real quantum circuit is executed once as a
+complete unit rather than incrementally advanced tick by tick the way CircuitCraft's
+continuous MNA solve is~\cite{picos2026circuitcraft}.
