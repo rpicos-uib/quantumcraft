@@ -6,7 +6,7 @@ A Fabric mod that turns Minecraft into a quantum-circuit lab. Place single-qubit
 probability, or a genuine collapsing Born-rule measurement — all backed by a real
 complex-amplitude statevector simulator, not a scripted approximation.
 
-This is a teaching tool, a companion to [CircuitCraft](https://github.com/rpicos-uib/circuitcraft)
+This is a teaching tool, a companion to [CircuitSimCraft](https://github.com/rpicos-uib/circuitsimcraft)
 (the same idea applied to analog electronics): the goal is for every probability and measurement
 outcome you see in-game to come from actually simulating the circuit you built, down to genuine
 entanglement (a Bell state really has zero probability of reading `01` or `10`) and genuine
