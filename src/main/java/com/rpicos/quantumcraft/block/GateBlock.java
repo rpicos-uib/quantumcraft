@@ -39,7 +39,7 @@ public class GateBlock extends Block implements EntityBlock {
 	@Override
 	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos,
 			Player player, InteractionHand hand, BlockHitResult hitResult) {
-		// See CircuitCraft's ComponentBlock for why this guard is needed: without it, ANY item in
+		// See CircuitSimCraft's ComponentBlock for why this guard is needed: without it, ANY item in
 		// hand (not just a genuinely empty one) falls back to the empty-hand cycle behavior and
 		// silently swallows the interaction, so a held Quantum Probe's own useOn() never runs.
 		return stack.isEmpty() ? InteractionResult.TRY_WITH_EMPTY_HAND : InteractionResult.PASS;

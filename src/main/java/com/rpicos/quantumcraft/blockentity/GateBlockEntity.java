@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /** A single-qubit gate. One block, cycled by right-click through the six gates this mod offers -
- *  the same "one block, several presets" pattern CircuitCraft's Resistor or Diode use, rather
+ *  the same "one block, several presets" pattern CircuitSimCraft's Resistor or Diode use, rather
  *  than a separate block per gate, since these are different flavors of the same kind of thing
  *  (a 2x2 unitary applied to one qubit at this time-step) rather than different physical
  *  component types. */

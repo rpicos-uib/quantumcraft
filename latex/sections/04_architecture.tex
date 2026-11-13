@@ -1,8 +1,8 @@
 \section{System Architecture}
 \label{sec:architecture}
 
-QuantumCraft is built on Fabric, the same modding toolchain CircuitCraft
-uses~\cite{picos2026circuitcraft}. The codebase is organized into five packages, shown in
+QuantumCraft is built on Fabric, the same modding toolchain CircuitSimCraft
+uses~\cite{picos2026circuitsimcraft}. The codebase is organized into five packages, shown in
 Figure~\ref{fig:architecture}: a simulator package with no dependency on any Minecraft class
 at all, a pair of packages describing the in-world blocks and their per-block state, a
 networking package that scans a player's placed blocks into a circuit and reports the result
@@ -28,7 +28,7 @@ heads-up display.
 \draw[-{Latex[length=2mm]}] (network) -- (sim);
 \draw[-{Latex[length=2mm]}] (client) -- (network);
 \end{tikzpicture}
-\caption{Package-level architecture. As in CircuitCraft, the simulator has zero Minecraft
+\caption{Package-level architecture. As in CircuitSimCraft, the simulator has zero Minecraft
 dependencies and is directly unit-testable with plain \texttt{javac}/\texttt{java}; every
 other layer builds on it.}
 \label{fig:architecture}
@@ -39,18 +39,18 @@ other layer builds on it.}
 A qubit-line block establishes one qubit's timeline row and carries no adjustable state of
 its own. A single gate block, placed east of a qubit line's anchor, cycles through six
 presets on right-click -- Pauli~$X$, $Y$, $Z$, Hadamard, $S$, and $T$ -- exactly as
-CircuitCraft's diode cycles through its own preset family~\cite{picos2026circuitcraft}: one
+CircuitSimCraft's diode cycles through its own preset family~\cite{picos2026circuitsimcraft}: one
 block class serves every single-qubit gate rather than six separate block classes, keeping
 the block/texture/recipe count tractable while still exposing the full single-qubit gate set
 this mod supports. A control marker and a target marker, placed at the same east-offset on
 two (for CNOT) or three (for Toffoli, with two control markers) different qubit rows,
 together represent a multi-qubit gate; unlike every two-terminal component in
-CircuitCraft, none of these blocks is directional, since a gate's effect does not depend on
+CircuitSimCraft, none of these blocks is directional, since a gate's effect does not depend on
 which horizontal face a player was looking toward when it was placed.
 
 \subsection{The world-scan-to-circuit bridge}
 
-Unlike CircuitCraft's continuous, per-tick network rebuild, QuantumCraft constructs a circuit
+Unlike CircuitSimCraft's continuous, per-tick network rebuild, QuantumCraft constructs a circuit
 only when a player right-clicks the probe against a qubit line, via a four-step scan.
 First, a flood fill over six-face adjacency, following only positions whose block entity is a
 qubit line, finds every qubit line connected to the clicked position. Second, the found lines
@@ -64,8 +64,8 @@ one target marker at the same column becomes a controlled-NOT; two control marke
 with one target becomes a Toffoli gate. Any other combination found within a single column --
 an unpaired control with no target, two target markers, or more controls than the mod's
 gate set supports -- is recorded as a warning and simply skipped rather than causing the scan
-to fail, so an incompletely wired column fails safely, in the same spirit as CircuitCraft's
-floating-node handling~\cite{picos2026circuitcraft}, rather than crashing or silently
+to fail, so an incompletely wired column fails safely, in the same spirit as CircuitSimCraft's
+floating-node handling~\cite{picos2026circuitsimcraft}, rather than crashing or silently
 misinterpreting the player's intent.
 
 \subsection{The quantum probe}
@@ -75,7 +75,7 @@ above, builds the resulting circuit's final statevector (Section~\ref{sec:quantu
 and reports one of two things back to the clicking player, depending on whether the
 interaction was a plain right-click or a shift-right-click. A plain right-click performs an
 \emph{ideal readout}: every basis state's exact probability is computed and sent to the
-client, with no randomness and no collapse, the same sense in which CircuitCraft's
+client, with no randomness and no collapse, the same sense in which CircuitSimCraft's
 oscilloscope displays an exact voltage rather than a noisy measurement. A shift-right-click
 instead performs a genuine \emph{measurement}: the final statevector is sampled once, using
 the standard Born-rule cumulative-probability procedure (Section~\ref{sec:quantum-simulator}),

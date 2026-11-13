@@ -2,7 +2,7 @@ package com.rpicos.quantumcraft.client;
 
 import com.rpicos.quantumcraft.network.QuantumResultPayload;
 
-/** Unlike CircuitCraft's oscilloscope channels, a quantum probe reading is a one-shot event, not
+/** Unlike CircuitSimCraft's oscilloscope channels, a quantum probe reading is a one-shot event, not
  *  a continuously re-sent stream - so instead of pruning stale entries every tick, the latest
  *  result is simply kept on screen for a fixed display window after each probe use, then cleared. */
 final class QuantumResultClientState {

@@ -6,7 +6,7 @@ import java.util.List;
 /** An ordered sequence of gates, exactly the "one row per qubit, gates left to right in time"
  *  structure a standard quantum-circuit diagram already is - this class is what a world scan of
  *  a player's qubit-line rows gets turned into, and {@link #run()} is what actually executes it,
- *  entirely independent of Minecraft. Unlike {@code CircuitCraft}'s continuously-ticking MNA
+ *  entirely independent of Minecraft. Unlike {@code CircuitSimCraft}'s continuously-ticking MNA
  *  network, a quantum circuit here is static and is "solved" once, on demand, rather than once
  *  per game tick - there is no notion of a mid-circuit voltage to watch evolve in real time, only
  *  a well-defined final state once every gate up to that point has been applied. */
