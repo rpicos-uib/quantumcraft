@@ -5,8 +5,8 @@
 (Pauli~$X$/$Y$/$Z$, Hadamard, $S$, $T$) and the control/target multi-qubit mechanism are
 enough to build every worked experiment in Section~\ref{sec:experiments}, but exclude an
 arbitrary-angle rotation gate ($R_x(\theta)$, $R_y(\theta)$, $R_z(\theta)$), which a more
-advanced course would eventually need. As with CircuitCraft's own preset-cycling
-interaction~\cite{picos2026circuitcraft}, this design keeps the interaction model consistent
+advanced course would eventually need. As with CircuitSimCraft's own preset-cycling
+interaction~\cite{picos2026circuitsimcraft}, this design keeps the interaction model consistent
 with the remainder of the base game (right-clicking through a fixed, small list rather than a
 custom numeric-entry interface), at the cost of the continuous control a full gate set
 provides; exposing a numeric-entry interface for an arbitrary rotation angle is a natural
@@ -30,13 +30,13 @@ gate, a pattern used by more advanced protocols such as quantum teleportation. S
 would require the world-scan algorithm (Section~\ref{sec:architecture}) to interleave scanning
 and execution rather than building the whole circuit before running any of it.
 
-\textbf{No persisted circuit state, no saved presets.} As with CircuitCraft's
-components~\cite{picos2026circuitcraft}, no block entity in this mod persists its
+\textbf{No persisted circuit state, no saved presets.} As with CircuitSimCraft's
+components~\cite{picos2026circuitsimcraft}, no block entity in this mod persists its
 right-click-selected preset across a world save and reload, and a circuit itself is never
 saved as an object -- only the placed blocks that describe it. This is a deliberate
 simplification given that QuantumCraft's circuits are re-run from scratch on every probe use
 regardless (Section~\ref{sec:quantum-simulator}), but it does mean a player must re-verify a
-gate's cycled-to preset after any world reload, exactly as a CircuitCraft player must for a
+gate's cycled-to preset after any world reload, exactly as a CircuitSimCraft player must for a
 resistor's resistance or a diode's forward-voltage family.
 
 \textbf{Verification remains informal.} As noted in Section~\ref{sec:validation}, the nine
@@ -50,7 +50,7 @@ to test whether the game-based, first-person construction experience described i
 Section~\ref{sec:pedagogy} produces a measurable difference in conceptual understanding,
 rather than in engagement alone.
 
-\textbf{Platform dependency.} As with CircuitCraft, the mod is necessarily tied to a specific
+\textbf{Platform dependency.} As with CircuitSimCraft, the mod is necessarily tied to a specific
 version of Minecraft and of the Fabric mod loader, both of which are externally maintained and
 continue to evolve, and ongoing maintenance to track future game updates remains an
 unavoidable cost of building instructional software atop an actively developed commercial

@@ -23,7 +23,7 @@ import java.util.TreeMap;
 
 /**
  * Turns a right-clicked {@link QubitLineBlockEntity} into a {@link QuantumCircuit}, by pure
- * on-demand world inspection rather than any persisted registry - unlike CircuitCraft's
+ * on-demand world inspection rather than any persisted registry - unlike CircuitSimCraft's
  * continuously-ticking, incrementally-rebuilt network, a quantum circuit here is read fresh
  * every time it's probed, since there is no per-tick state to maintain between probes at all.
  *

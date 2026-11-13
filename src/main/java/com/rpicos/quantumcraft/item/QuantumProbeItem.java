@@ -21,7 +21,7 @@ import java.util.Random;
 /**
  * Right-click a qubit line to run the whole circuit it's part of and read out the exact
  * probability of every basis state - the "ideal" readout, no measurement actually performed, the
- * same sense in which CircuitCraft's oscilloscope shows an exact voltage. Shift-right-click
+ * same sense in which CircuitSimCraft's oscilloscope shows an exact voltage. Shift-right-click
  * instead performs a genuine Born-rule measurement: the circuit is run once, then the register
  * is actually collapsed onto a single random outcome, exactly the way a real quantum computer's
  * one-shot measurement would be, and only that outcome is reported.
